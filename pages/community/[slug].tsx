@@ -199,6 +199,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // LIVE-22: use PublishPress author image, not the /blog/images/author.webp
         // placeholder. The schema generator also filters the placeholder.
         authorImage: ppmaSchemaImage,
+        // E-E-A-T author bio → Person.description. Only the real extracted bio;
+        // the generic "An author for Keploy's blog." fallback is never emitted
+        // into schema (the "never fabricate" rule from the A1/AI1 schema work).
+        authorDescription:
+          writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
+            ? writerDescriptionMatch[1].trim()
+            : undefined,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
         // LIVE-22: emit reviewedBy Person schema when reviewer data is
         // present. The schema generator skips the emit when the reviewer

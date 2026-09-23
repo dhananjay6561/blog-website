@@ -170,6 +170,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         authorName: post?.ppmaAuthorName,
         // LIVE-22: use PublishPress author image, not the placeholder.
         authorImage: ppmaSchemaImage,
+        // E-E-A-T author bio → Person.description. Only the real extracted bio;
+        // the generic "An author for Keploy's blog." fallback is never emitted
+        // into schema (the "never fabricate" rule from the A1/AI1 schema work).
+        authorDescription:
+          writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
+            ? writerDescriptionMatch[1].trim()
+            : undefined,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
         // GEO-13: mark this as TechArticle (more specific than BlogPosting
         // for developer content). AI models weight TechArticle higher
